@@ -22,3 +22,11 @@ SELECT e.emp_id, e.emp_name, e.salary, d.dept_name
 FROM Employees e
 JOIN Departments d ON e.dept_id = d.dept_id;
 SELECT * FROM Employees e INNER JOIN Departments d ON e.dept_id = d.dept_id;
+SELECT e.emp_name, d.dept_name FROM Employees e LEFT JOIN Departments d ON e.dept_id = d.dept_id;
+SELECT e.emp_name, d.dept_name FROM Employees e RIGHT JOIN Departments d ON e.dept_id = d.dept_id;
+SELECT e.emp_name, d.dept_name FROM Employees e FULL JOIN Departments d ON e.dept_id = d.dept_id;
+SELECT emp_name, salary FROM Employees WHERE salary > (SELECT AVG(salary) FROM Employees);
+SELECT emp_name FROM Employees WHERE dept_id = (SELECT dept_id FROM Departments WHERE dept_name = 'IT');
+SELECT * FROM EmpDetails;
+SELECT dept_id, COUNT(*) AS total_employees FROM Employees GROUP BY dept_id HAVING COUNT(*) > 1;
+SELECT emp_name FROM Employees e WHERE NOT EXISTS (SELECT 1 FROM Employees m WHERE e.manager_id = m.emp_id);

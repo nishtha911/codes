@@ -1,6 +1,6 @@
 from collections import deque
 
-g = {
+graph = {
     'A': ['B', 'C', 'D'],
     'B': ['A', 'E'],
     'C': ['A', 'E'],
@@ -8,27 +8,27 @@ g = {
     'E': ['B', 'C', 'D']
 }
 
-def bfs(s, v=None):
-    if v is None:
-        v = set()
-    q = deque([s])
-    v.add(s)
-    while q:
-        n = q.popleft()
-        print(n, end=" ")
-        for nei in g[n]:
-            if nei not in v:
-                v.add(nei)
-                q.append(nei)
+def bfs(start, visited=None):
+    if visited is None:
+        visited = set()
+    queue = deque([start])
+    visited.add(start)
+    while queue:
+        current = queue.popleft()
+        print(current, end=" ")
+        for neighbor in graph[current]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
 
-def dfs(n, v=None):
-    if v is None:
-        v = set()
-    print(n, end=" ")
-    v.add(n)
-    for nei in g[n]:
-        if nei not in v:
-            dfs(nei, v)
+def dfs(current, visited=None):
+    if visited is None:
+        visited = set()
+    print(current, end=" ")
+    visited.add(current)
+    for neighbor in graph[current]:
+        if neighbor not in visited:
+            dfs(neighbor, visited)
 
 print("BFS:")
 bfs('A')

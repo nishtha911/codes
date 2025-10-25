@@ -1,52 +1,38 @@
 #include <iostream>
 #include <vector>
-#include <limits>
+#include <climits>
 using namespace std;
 
-struct Edge {
-    int u, v, w;
-};
+int main() {
+    int n, e, src;
+    cout << "Enter number of nodes and edges: ";
+    cin >> n >> e;
 
-void bellmanFord(int V, int E, const vector<Edge>& edges, int src) {
-    const int INF = numeric_limits<int>::max();
-    vector<int> dist(V, INF);
+    vector<vector<int>> edges;
+    cout << "Enter edges (u v w):\n";
+    for(int i=0;i<e;i++){
+        int u,v,w;
+        cin >> u >> v >> w;
+        edges.push_back({u,v,w});
+    }
+
+    cout << "Enter source node: ";
+    cin >> src;
+
+    vector<int> dist(n, INT_MAX);
     dist[src] = 0;
 
-    for (int i = 1; i < V; i++) {
-        for (int j = 0; j < E; j++) {
-            int u = edges[j].u;
-            int v = edges[j].v;
-            int w = edges[j].w;
-            if (dist[u] != INF && dist[u] + w < dist[v]) {
-                dist[v] = dist[u] + w;
-            }
+    for(int i=0;i<n-1;i++){
+        for(auto &edge : edges){
+            int u=edge[0], v=edge[1], w=edge[2];
+            if(dist[u]!=INT_MAX && dist[u]+w < dist[v])
+                dist[v] = dist[u]+w;
         }
     }
 
-    cout << "Distances from router " << src << ":\n";
-    for (int i = 0; i < V; i++) {
-        cout << "To " << i << " = ";
-        if (dist[i] == INF) cout << "INF";
-        else cout << dist[i];
-        cout << "\n";
-    }
-}
+    cout << "\nDistance Vector Routing Result:\n";
+    for(int i=0;i<n;i++)
+        cout << "Node " << src << " -> " << i << " = " << dist[i] << endl;
 
-int main() {
-    int V, E;
-    cout << "Enter number of routers and links: ";
-    cin >> V >> E;
-
-    vector<Edge> edges(E);
-    cout << "Enter edges (u v cost):\n";
-    for (int i = 0; i < E; i++) {
-        cin >> edges[i].u >> edges[i].v >> edges[i].w;
-    }
-
-    int src;
-    cout << "Enter source router: ";
-    cin >> src;
-
-    bellmanFord(V, E, edges, src);
     return 0;
 }

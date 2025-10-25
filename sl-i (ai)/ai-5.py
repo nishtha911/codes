@@ -12,7 +12,7 @@ def get_chatbot_response(user_input):
 
     elif any(word in user_input_lower for word in ["shipping", "delivery", "how long"]):
         return (
-            "🚚 Our standard shipping takes 3–5 business days. "
+            "🚚 Our standard shipping takes 3-5 business days. "
             "Express delivery options are also available at checkout. "
             "You can learn more on our Shipping Policy page."
         )

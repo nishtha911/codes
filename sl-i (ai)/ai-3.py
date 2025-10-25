@@ -24,4 +24,4 @@ def alphabeta(depth, node_index, is_max, values, alpha, beta, max_depth):
 
 values = [3, 5, 6, 9, 1, 2, 0, -1]
 
-print("Optimal value:", alphabeta(0, 0, True, values, -9999, 9999, 3))
+print("Optimal value:", alphabeta(1, 1, True, values, -9999, 9999, 3))

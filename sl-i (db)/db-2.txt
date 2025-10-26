@@ -1,0 +1,293 @@
+🎯 Database: collegeDB
+📁 Collection: students
+________________________________________
+🔧 1. Create (Insert) Documents
+javascript
+CopyEdit
+// Insert one student
+db.students.insertOne({
+  student_id: 101,
+  name: "Rahul Sharma",
+  age: 20,
+  branch: "CSE",
+  marks: 82,
+  passed: true
+})
+
+// Insert multiple students
+db.students.insertMany([
+  {
+    student_id: 102,
+    name: "Priya Verma",
+    age: 21,
+    branch: "IT",
+    marks: 76,
+    passed: true
+  },
+  {
+    student_id: 103,
+    name: "Amit Roy",
+    age: 22,
+    branch: "ECE",
+    marks: 45,
+    passed: false
+  }
+])
+
+________________________________________
+📄 2. Read (Retrieve) Documents
+javascript
+CopyEdit
+// Retrieve all documents
+db.students.find()
+
+// Retrieve students with marks greater than 70
+db.students.find({ marks: { $gt: 70 } })
+
+// Retrieve students from CSE branch OR who failed
+db.students.find({
+  $or: [{ branch: "CSE" }, { passed: false }]
+})
+
+// Retrieve students not from IT branch
+db.students.find({ branch: { $ne: "IT" } })
+
+// Retrieve students with age between 20 and 22
+db.students.find({ age: { $gte: 20, $lte: 22 } })
+
+________________________________________
+📝 3. Update Documents
+javascript
+CopyEdit
+// Update one student’s marks
+db.students.updateOne(
+  { student_id: 103 },
+  { $set: { marks: 55, passed: true } }
+)
+
+// Update multiple students: Add field "year" to all
+db.students.updateMany({}, { $set: { year: 2025 } })
+
+// Increment marks of all students by 5
+db.students.updateMany({}, { $inc: { marks: 5 } })
+
+________________________________________
+🆕 4. Save (Insert or Update)
+javascript
+CopyEdit
+// Save method: if _id exists, it updates; otherwise, it inserts
+db.students.save({
+  _id: ObjectId("..."),  // Use a real _id here
+  student_id: 104,
+  name: "Riya Mehta",
+  age: 23,
+  branch: "Mechanical",
+  marks: 60,
+  passed: true
+})
+
+// Save new document (if _id is not provided, it creates a new one)
+db.students.save({
+  student_id: 105,
+  name: "Rakesh Kumar",
+  age: 24,
+  branch: "Civil",
+  marks: 67,
+  passed: true
+})
+
+________________________________________
+❌ 5. Delete Documents
+javascript
+CopyEdit
+// Delete one document
+db.students.deleteOne({ student_id: 102 })
+
+// Delete multiple students who failed
+db.students.deleteMany({ passed: false })
+
+// Remove all students from ECE
+db.students.deleteMany({ branch: "ECE" })
+
+________________________________________
+✅ 6. Use of Logical Operators
+javascript
+CopyEdit
+// Students with marks > 60 AND age < 23
+db.students.find({
+  $and: [{ marks: { $gt: 60 } }, { age: { $lt: 23 } }]
+})
+
+// Students not passed OR marks less than 50
+db.students.find({
+  $or: [{ passed: false }, { marks: { $lt: 50 } }]
+})
+
+// Students neither from CSE nor from IT
+db.students.find({
+  branch: { $nin: ["CSE", "IT"] }
+})
+
+
+OR
+
+📁 Database Name: CollegeDB
+📄 Collection Name: students
+Each student document will look like:
+json
+CopyEdit
+{
+  "_id": ObjectId("..."),
+  "name": "Amit Sharma",
+  "age": 20,
+  "department": "Computer Science",
+  "marks": 85,
+  "passed": true
+}
+
+________________________________________
+🔧 1. Create Operation
+➤ Insert one document
+javascript
+CopyEdit
+db.students.insertOne({
+  name: "Amit Sharma",
+  age: 20,
+  department: "Computer Science",
+  marks: 85,
+  passed: true
+});
+
+➤ Insert many documents
+javascript
+CopyEdit
+db.students.insertMany([
+  {
+    name: "Neha Verma",
+    age: 22,
+    department: "IT",
+    marks: 92,
+    passed: true
+  },
+  {
+    name: "Ravi Kumar",
+    age: 19,
+    department: "ECE",
+    marks: 67,
+    passed: false
+  }
+]);
+
+________________________________________
+🔍 2. Read Operation
+➤ Find all documents
+javascript
+CopyEdit
+db.students.find();
+
+➤ Find students with marks > 70
+javascript
+CopyEdit
+db.students.find({ marks: { $gt: 70 } });
+
+➤ Find students from CS department and passed
+javascript
+CopyEdit
+db.students.find({
+  $and: [
+    { department: "Computer Science" },
+    { passed: true }
+  ]
+});
+
+➤ Find students who either failed OR have marks < 60
+javascript
+CopyEdit
+db.students.find({
+  $or: [
+    { passed: false },
+    { marks: { $lt: 60 } }
+  ]
+});
+
+________________________________________
+🖊️ 3. Update Operation
+➤ Update one student's marks
+javascript
+CopyEdit
+db.students.updateOne(
+  { name: "Amit Sharma" },
+  { $set: { marks: 90 } }
+);
+
+➤ Update multiple students who failed → set passed: true if marks > 50
+javascript
+CopyEdit
+db.students.updateMany(
+  { passed: false, marks: { $gt: 50 } },
+  { $set: { passed: true } }
+);
+
+________________________________________
+❌ 4. Delete Operation
+➤ Delete one student
+javascript
+CopyEdit
+db.students.deleteOne({ name: "Ravi Kumar" });
+
+➤ Delete all students with marks < 40
+javascript
+CopyEdit
+db.students.deleteMany({ marks: { $lt: 40 } });
+
+________________________________________
+💾 5. save() Method
+The save() method either inserts a new document or updates it if _id already exists.
+➤ Insert using save
+javascript
+CopyEdit
+db.students.save({
+  name: "Kavita Joshi",
+  age: 21,
+  department: "Mechanical",
+  marks: 75,
+  passed: true
+});
+
+➤ Update using save (must include _id)
+javascript
+CopyEdit
+var student = db.students.findOne({ name: "Kavita Joshi" });
+student.marks = 80;
+db.students.save(student); // Updates because _id exists
+
+________________________________________
+🔗 6. Using Logical Operators
+➤ $and, $or, $not, $nor
+a. Students aged between 18 and 22:
+javascript
+CopyEdit
+db.students.find({
+  $and: [
+    { age: { $gte: 18 } },
+    { age: { $lte: 22 } }
+  ]
+});
+
+b. Students NOT in CS department:
+javascript
+CopyEdit
+db.students.find({
+  department: { $not: { $eq: "Computer Science" } }
+});
+
+c. Students who neither passed nor have marks > 60:
+javascript
+CopyEdit
+db.students.find({
+  $nor: [
+    { passed: true },
+    { marks: { $gt: 60 } }
+  ]
+});
+

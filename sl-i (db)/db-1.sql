@@ -1,40 +1,40 @@
-CREATE TABLE Students (
-student_id INT PRIMARY KEY AUTO_INCREMENT,
-first_name VARCHAR(50) NOT NULL,
-last_name VARCHAR(50),
-email VARCHAR(100) UNIQUE,
-age INT CHECK (age >= 18),
-course_id INT,
-CONSTRAINT fk_course FOREIGN KEY (course_id) REFERENCES Courses(course_id)
+CREATE TABLE Departments (
+dept_id INT PRIMARY KEY AUTO_INCREMENT,
+dept_name VARCHAR(100) NOT NULL
 );
-CREATE TABLE Courses (
-course_id INT PRIMARY KEY AUTO_INCREMENT,
-course_name VARCHAR(100) NOT NULL,
-credits INT DEFAULT 3
+CREATE TABLE Employees (
+emp_id INT PRIMARY KEY AUTO_INCREMENT,
+emp_name VARCHAR(100) NOT NULL,
+salary DECIMAL(10,2),
+dept_id INT,
+manager_id INT,
+FOREIGN KEY (dept_id) REFERENCES Departments(dept_id)
 );
-CREATE INDEX idx_lastname ON Students(last_name);
-CREATE VIEW StudentDetails AS
-SELECT s.student_id, s.first_name, s.last_name, c.course_name, c.credits
-FROM Students s
-JOIN Courses c ON s.course_id = c.course_id;
-CREATE TABLE StudentSeq (
-id INT PRIMARY KEY AUTO_INCREMENT
-);
-INSERT INTO Courses (course_name, credits) VALUES ('Database Systems', 4);
-INSERT INTO Courses (course_name, credits) VALUES ('Operating Systems', 3);
-INSERT INTO Students (first_name, last_name, email, age, course_id)
-VALUES ('Nishtha', 'Pardesi', 'nishtha@example.com', 19, 1);
-INSERT INTO Students (first_name, last_name, email, age, course_id)
-VALUES ('Pratik', 'Paralikar', 'pratik@example.com', 20, 1);
-INSERT INTO Students (first_name, last_name, email, age, course_id)
-VALUES ('Ananya', 'Chavan', 'ananya@example.com', 19, 2);
-UPDATE Students SET email = 'nishtha.patil@example.com' WHERE student_id = 1;
-DELETE FROM Students WHERE student_id = 2;
-SELECT * FROM Students;
-SELECT * FROM StudentDetails;
-SELECT first_name, last_name FROM Students WHERE age > 20;
-SELECT course_id, COUNT(*) AS total_students
-FROM Students
-GROUP BY course_id;
-SELECT course_name FROM Courses ORDER BY credits DESC LIMIT 1;
-SELECT * FROM Students ORDER BY last_name ASC;
+INSERT INTO Departments (dept_name) VALUES ('HR'), ('IT'), ('Finance');
+INSERT INTO Employees (emp_name, salary, dept_id, manager_id) VALUES
+('Nishtha', 50000, 1, NULL),
+('Ananya', 60000, 2, 1),
+('Pratik', 55000, 2, 1),
+('Soham', 45000, 3, 2),
+('Disha', 70000, 2, NULL);
+--1
+CREATE VIEW EmpDetails AS
+SELECT e.emp_id, e.emp_name, e.salary, d.dept_nameFROM Employees eJOIN Departments d ON e.dept_id = d.dept_id;
+--2
+SELECT * FROM Employees e INNER JOIN Departments d ON e.dept_id = d.dept_id;
+--3
+SELECT e.emp_name, d.dept_name FROM Employees e LEFT JOIN Departments d ON e.dept_id = d.dept_id;
+--4
+SELECT e.emp_name, d.dept_name FROM Employees e RIGHT JOIN Departments d ON e.dept_id = d.dept_id;
+--5
+SELECT e.emp_name, d.dept_name FROM Employees e FULL JOIN Departments d ON e.dept_id = d.dept_id;
+--6
+SELECT emp_name, salary FROM Employees WHERE salary > (SELECT AVG(salary) FROM Employees);
+--7
+SELECT emp_name FROM Employees WHERE dept_id = (SELECT dept_id FROM Departments WHERE dept_name = 'IT');
+--8
+SELECT * FROM EmpDetails;
+--9
+SELECT dept_id, COUNT(*) AS total_employees FROM Employees GROUP BY dept_id HAVING COUNT(*) > 1;
+--10
+SELECT emp_name FROM Employees e WHERE NOT EXISTS (SELECT 1 FROM Employees m WHERE e.manager_id = m.emp_id);

@@ -19,7 +19,7 @@ INSERT INTO Employees (emp_name, salary, dept_id, manager_id) VALUES
 ('Disha', 70000, 2, NULL);
 --1
 CREATE VIEW EmpDetails AS
-SELECT e.emp_id, e.emp_name, e.salary, d.dept_nameFROM Employees eJOIN Departments d ON e.dept_id = d.dept_id;
+SELECT e.emp_id, e.emp_name, e.salary, d.dept_name FROM Employees e JOIN Departments d ON e.dept_id = d.dept_id;
 --2
 SELECT * FROM Employees e INNER JOIN Departments d ON e.dept_id = d.dept_id;
 --3

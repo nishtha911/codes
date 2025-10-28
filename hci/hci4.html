@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Playwrite+HU:wght@100..400&family=Story+Script&display=swap" rel="stylesheet">
+    <title>HCI Assignment 4</title>
+    <style>
+      body {
+        font-family: "Playwrite HU", cursive;
+        background: linear-gradient(to right, #340000, #000047); 
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding-top: 50px;
+        min-height: 100vh;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 800px;
+        background-color: #1d002b;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .tab-bar {
+        display: flex;
+        border-bottom: 2px solid #000000;
+      }
+
+      .tab-button {
+        flex-grow: 1;
+        padding: 15px 20px;
+        border: none;
+        background-color: #000000;
+        color: #ffffff;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .tab-button:hover:not(.active) {
+        background-color: #d1d1d1;
+      }
+
+      .tab-button.active {
+        background-color: #8000ff;
+        color: white;
+        font-weight: bold;
+        border-bottom: 3px solid #45008a;
+      }
+
+      .tab-content {
+        padding: 20px;
+        line-height: 1.6;
+        animation: fadeIn 0.5s;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .tab-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+      }
+
+      .tab-content iframe {
+        width: 100%;
+        height: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="tab-bar">
+        <button class="tab-button active" data-tab="text-tab">Text Content</button>
+        <button class="tab-button" data-tab="image-tab">Image</button>
+        <button class="tab-button" data-tab="video-tab">YouTube Video</button>
+      </div>
+
+      <div id="text-tab" class="tab-content" style="color: white;">
+        <h2>HCI Assignment 4</h2>
+        <p>
+          This is a simple text area. It is the default tab, displayed on page
+          load. The content is managed entirely by controlling the display
+          property in JavaScript.
+        </p>
+      </div>
+
+      <div id="image-tab" class="tab-content hidden" style="color: white;">
+        <h2>A Simple Image</h2>
+        <img
+          src="https://think360studio-media.s3.ap-south-1.amazonaws.com/photo/plugin/article/2023/Human-Computer-Interaction-(HCI)-18012023.jpg"
+          alt="Random Placeholder Image"
+        />
+        <p>This image is sourced from Picsum for demonstration.</p>
+      </div>
+
+      <div id="video-tab" class="tab-content hidden" style="color: white;">
+        <h2>Embedded YouTube Video</h2>
+        <iframe
+          width="853"
+          height="480"
+          src="https://www.youtube.com/embed/yNzLBI0wsGU"
+          title="HCI - Human Computer Interaction. What Is HCI?"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const tabButtons = document.querySelectorAll(".tab-button");
+        const tabContents = document.querySelectorAll(".tab-content");
+
+        function openTab(tabId) {
+          tabContents.forEach((content) => {
+            content.classList.add("hidden");
+          });
+
+          tabButtons.forEach((button) => {
+            button.classList.remove("active");
+          });
+
+          const targetContent = document.getElementById(tabId);
+          if (targetContent) {
+            targetContent.classList.remove("hidden");
+          }
+
+          const targetButton = document.querySelector(
+            `.tab-button[data-tab="${tabId}"]`
+          );
+          if (targetButton) {
+            targetButton.classList.add("active");
+          }
+        }
+
+        tabButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const tabId = button.dataset.tab;
+            openTab(tabId);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

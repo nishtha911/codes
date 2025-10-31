@@ -1,45 +1,43 @@
-import ipaddress
+import math
 
-def calculate_subnet_info(ip_cidr):
-    try:
-        network = ipaddress.ip_network(ip_cidr, strict=False)
-    except ValueError as e:
-        print("Error processing IP/CIDR:", e)
+def get_class(ip_first_octet):
+    ip_first_octet = int(ip_first_octet)
+    if 1 <= ip_first_octet <= 126:
+        return 'A', 8, "255.0.0.0"
+    elif 128 <= ip_first_octet <= 191:
+        return 'B', 16, "255.255.0.0"
+    elif 192 <= ip_first_octet <= 223:
+        return 'C', 24, "255.255.255.0"
+    else:
+        return 'Unknown', 0, "N/A"
+
+
+def calculate_subnet_details(default_mask_bits, subnet_bits):
+    total_subnets = 2 ** subnet_bits
+    host_bits = 32 - (default_mask_bits + subnet_bits)
+    hosts_per_subnet = (2 ** host_bits) - 2 if host_bits > 0 else 0
+    return total_subnets, hosts_per_subnet
+
+
+def main():
+    ip_address = input("Enter the IP Address (e.g., 192.168.1.0): ")
+    subnet_bits = int(input("Enter the number of subnet bits: "))
+
+    first_octet = ip_address.split(".")[0]
+    ip_class, default_mask_bits, default_mask = get_class(first_octet)
+
+    if ip_class == 'Unknown':
+        print("This IP address class is not supported for subnetting.")
         return
-    
-    netmask = str(network.netmask)
-    network_address = str(network.network_address)
-    broadcast_address = str(network.broadcast_address)
-    num_usable_hosts = network.num_addresses - 2
-    
-    # Calculate First Usable Host (Network Address + 1)
-    if network.num_addresses > 1:
-        first_host = str(network.network_address + 1)
-    else:
-        first_host = "N/A (No usable hosts)"
 
-    # Calculate Last Usable Host (Broadcast Address - 1)
-    if network.num_addresses > 1:
-        last_host = str(network.broadcast_address - 1)
-    else:
-        last_host = "N/A (No usable hosts)"
+    total_subnets, hosts_per_subnet = calculate_subnet_details(default_mask_bits, subnet_bits)
 
-    print("Input IP/CIDR:", ip_cidr)
-    print("---------------------------------")
-    print("Subnet Mask:", netmask)
-    print("Network Address:", network_address)
-    print("Broadcast Address:", broadcast_address)
-    print("First Usable Host:", first_host)
-    print("Last Usable Host:", last_host)
-    print("Total Addresses:", network.num_addresses)
-    print("Usable Hosts:", num_usable_hosts)
+    print(f"\nIP Address: {ip_address}")
+    print(f"Class: {ip_class}")
+    print(f"Default Subnet Mask: {default_mask}")
+    print(f"Total Subnets: {total_subnets}")
+    print(f"Hosts per Subnet: {hosts_per_subnet}")
 
-calculate_subnet_info("192.168.1.50/27")
 
-print("\n")
-
-calculate_subnet_info("172.16.10.20/24")
-
-print("\n")
-
-calculate_subnet_info("10.0.0.1/8")
+if __name__ == "__main__":
+    main()

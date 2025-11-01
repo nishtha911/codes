@@ -1,39 +1,26 @@
 def distance_vector_routing(graph):
     nodes = list(graph.keys())
-    distance_vectors = {node: {n: float('inf') for n in nodes} for node in nodes}
-    for node in nodes:
-        distance_vectors[node][node] = 0
-    
+    dist = {u: {v: float('inf') for v in nodes} for u in nodes}
+
+
     for u in nodes:
-        for v, weight in graph[u].items():
-            distance_vectors[u][v] = weight
+        dist[u][u] = 0
+        for v, w in graph[u].items():
+            dist[u][v] = w
 
-    while True:
-        updated = False
-        new_distance_vectors = {u: dv.copy() for u, dv in distance_vectors.items()}
-        
-        for u in nodes: 
-            for v in nodes: 
+    changed = True
+    while changed:
+        changed = False
+        for u in nodes:
+            for v in nodes:
+                for n in graph[u]:  
+                    if dist[u][v] > graph[u][n] + dist[n][v]:
+                        dist[u][v] = graph[u][n] + dist[n][v]
+                        changed = True
+    return dist
 
-                min_dist = distance_vectors[u][v]
-                for w in graph[u]: 
-                   
-                    path_cost = graph[u][w] + distance_vectors[w][v]
-                    
-                    if path_cost < min_dist:
-                        min_dist = path_cost
-                        updated = True
-                
-                new_distance_vectors[u][v] = min_dist
 
-        distance_vectors = new_distance_vectors
-        
-        if not updated:
-            break
-
-    return distance_vectors
-
-graph_dv = {
+graph = {
     'A': {'B': 4, 'C': 2},
     'B': {'A': 4, 'C': 1, 'D': 5},
     'C': {'A': 2, 'B': 1, 'D': 8, 'E': 10},
@@ -41,9 +28,8 @@ graph_dv = {
     'E': {'C': 10, 'D': 2}
 }
 
-final_distance_vectors = distance_vector_routing(graph_dv)
+result = distance_vector_routing(graph)
 
-print("\nDistance Vector Routing Results")
-print("Final Routing Tables (Shortest Distances to all destinations):")
-for node, dv in final_distance_vectors.items():
-    print("Node", node + ":", dv)
+print("\n--- Distance Vector Routing ---")
+for node in result:
+    print(f"Node {node}: {result[node]}")

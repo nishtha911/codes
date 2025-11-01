@@ -1,5 +1,3 @@
-import math
-
 def get_class(ip_first_octet):
     ip_first_octet = int(ip_first_octet)
     if 1 <= ip_first_octet <= 126:
